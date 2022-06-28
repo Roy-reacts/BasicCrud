@@ -2,9 +2,9 @@
 
   <div class="row g-0">
 
-      <div class="col-md-2 d-flex justify-content-center align-items-center">
+      <!-- <div class="col-md-2 d-flex justify-content-center align-items-center">
           <img src="../../assets/Images/{{employee.profile}}" alt="Profile Image" class="profile">
-      </div>
+      </div> -->
 
       <div class="col ps-2">
 
@@ -36,22 +36,29 @@
                           </tr>
                       </thead>
                       <tbody>
+
                           <tr>
-                              <td>Birthdate</td>
-                              <td>{{employee.birthdate}}</td>
-                          </tr>
+                            <td>Email</td>
+                            <td>{{employee.email}}</td>
+                        </tr>
+                        <tr>
+                          <td>Phone</td>
+                          <td>{{employee.phone}}</td>
+                      </tr>
                           <tr>
                               <td>Gender</td>
                               <td>{{employee.gender == 'm' ? "Male" : "Female"}}</td>
                           </tr>
-
+<tr>
+                              <td>Birthday</td>
+                              <td>{{employee.birthdate}}</td>
+                          </tr>
                       </tbody>
                   </table>
 
               </div>
 
-              <div class="col">
-
+              <div class="col" *ngFor="let edu of employee.education">
                   <table class="table table-hover mx-auto">
                       <thead class="text-center fs-5 fst-italic text-secondary">
                           <tr>
@@ -61,21 +68,21 @@
                       <tbody>
                         <tr>
                           <td>Education</td>
-                          <td>{{employee.education | titlecase}}</td>
+                          <td>{{edu.education | titlecase}}</td>
                       </tr>
                           <tr>
-                              <td>Company</td>
-                              <td>{{employee.institute | titlecase}}</td>
+                              <td>Institute</td>
+                              <td>{{edu.institute | titlecase}}</td>
                           </tr>
                           <tr>
                               <td>From</td>
-                              <td>{{employee.startDate}} </td>
+                              <td>{{edu.startDate}} </td>
                               <td>To</td>
-                              <td>{{employee.endDate}}</td>
+                              <td>{{edu.endDate}}</td>
                           </tr>
                           <tr>
-                              <td>Salary</td>
-                              <td>{{employee.grade}} GPA</td>
+                              <td>Grade</td>
+                              <td>{{edu.grade}} GPA</td>
                           </tr>
                       </tbody>
                   </table>

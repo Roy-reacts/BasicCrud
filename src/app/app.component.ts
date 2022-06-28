@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Employee } from './models/employee.model';
 import { EmployeeService } from './services/employee.service';
 
@@ -24,6 +24,8 @@ export class AppComponent implements OnInit, AfterViewInit {
     'Post Graduation'
   ];
 
+  editFlag=false;
+  educationArray=[{}];
   constructor(
     private fb: FormBuilder,
     private employeeService: EmployeeService
@@ -35,14 +37,14 @@ export class AppComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
     this.employeeForm = this.fb.group({
-      firstname: this.fb.control(''),
-      lastname: this.fb.control(''),
+      firstname: new FormControl("" , [Validators.required,Validators.pattern("[a-zA-Z].*") ,Validators.minLength(2)]),
+      lastname : new FormControl("",[Validators.required,Validators.pattern("[a-zA-Z].*"),Validators.minLength(2)]),
+      email: new FormControl("",[Validators.required,Validators.email]),
+      phone: new FormControl("",[Validators.required,Validators.pattern("[0-9]*") ,Validators.minLength(11),Validators.maxLength(11)]),
       birthday: this.fb.control(''),
-      email: this.fb.control(''),
-      phone: this.fb.control(''),
 
-      gender: this.fb.control(''),
-      education: this.fb.control('default'),
+      gender : new FormControl("",Validators.required),
+      education: this.fb.control(''),
       institute: this.fb.control(''),
       startDate: this.fb.control(''),
       endDate: this.fb.control(''),
@@ -62,19 +64,44 @@ export class AppComponent implements OnInit, AfterViewInit {
     //this.buttontemp.nativeElement.click();
   }
 
+  addEducation() {
+console.log("Educated");
+this.educationArray.pop();
+this.educationArray.push({
+  education: this.Education.value,
+  institute: this.Institute.value,
+  startDate: this.StartDate.value,
+  endDate: this.EndDate.value,
+  grade: this.Grade.value
+});
+this.educationArray.push({})
+  }
+
   addEmployee() {
-    let employee: Employee = {
+    if(!this.editFlag){
+    this.educationArray.pop();
+    this.educationArray.push({
+      education: this.Education.value,
+      institute: this.Institute.value,
+      startDate: this.StartDate.value,
+      endDate: this.EndDate.value,
+      grade: this.Grade.value
+    });}
+
+    this.editFlag=false;
+
+    let employee: any = {
       firstname: this.FirstName.value,
       lastname: this.LastName.value,
       birthdate: this.BirthDay.value,
       gender: this.Gender.value,
       email:this.Email.value,
       phone:this.Phone.value,
-      education: this.educationOptions[parseInt(this.Education.value)],
-      institute: this.Institute.value,
-      startDate: this.StartDate.value,
-      endDate: this.EndDate.value,
-      grade: this.Grade.value,
+      education: this.educationArray,
+      // institute: this.Institute.value,
+      // startDate: this.StartDate.value,
+      // endDate: this.EndDate.value,
+      // grade: this.Grade.value,
       profile: this.fileInput.nativeElement.files[0]?.name,
     };
     this.employeeService.postEmployee(employee).subscribe((res) => {
@@ -96,6 +123,7 @@ export class AppComponent implements OnInit, AfterViewInit {
   editEmployee(event: any) {
     this.employees.forEach((val, ind) => {
       if (val.id === event) {
+        this.editFlag=true;
         this.setForm(val);
       }
     });
@@ -111,11 +139,11 @@ export class AppComponent implements OnInit, AfterViewInit {
     this.Email.setValue(emp.email);
     this.Phone.setValue(emp.phone);
 
-    let educationIndex = 0;
-    this.educationOptions.forEach((val, index) => {
-      if (val === emp.education) educationIndex = index;
-    });
-    this.Education.setValue(educationIndex);
+    // let educationIndex = 0;
+    // this.educationOptions.forEach((val, index) => {
+    //   if (val === emp.education) educationIndex = index;
+    // });
+    this.Education.setValue(emp.education);
 
     this.Institute.setValue(emp.institute);
     this.StartDate.setValue(emp.startDate);

@@ -6,7 +6,7 @@ export class Employee {
   gender: string = '';
   email:string=  '^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$';
   phone:string='';
-  education: string = '';
+  education: any;
   institute: string = '';
   startDate: string = '';
   endDate: string = '';
